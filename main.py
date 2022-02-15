@@ -53,7 +53,7 @@ def Scrape_Zillow():
 
         for content in results:
             house_price = content.find(class_="list-card-price")
-            house_specs = content.find(class_="list-card-details")
+            house_specs = content.find(class_="list-card-details") #Not formated correctly
             house_type = content.find(class_="list-card-statusText")
             house_address = content.find(class_="list-card-addr")
             house_link = content.find(class_="list-card-link list-card-link-top-margin list-card-img")
