@@ -35,15 +35,16 @@ def Scrape_HomeFinder():
 def Scrape_Zillow():
     print()
     req_headers = {
-        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
         'accept-encoding': 'gzip, deflate, br',
-        'accept-language': 'en-US,en;q=0.8',
+        'accept-language': 'en-US,en;q=0.9',
         'upgrade-insecure-requests': '1',
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.87 Safari/537.36'
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
     }
     with requests.Session() as s:   
         locationInput = input("Where is the location? (city, state)")
         URL = 'https://www.zillow.com/homes/for_sale/'+locationInput    
+        print(URL)
         page = s.get(URL, headers=req_headers)
         soup = BeautifulSoup(page.content, "html.parser")
         results = soup.find_all(class_="list-card list-card-additional-attribution list-card-additional-attribution-space list-card_not-saved")
@@ -56,11 +57,14 @@ def Scrape_Zillow():
             house_specs = content.find(class_="list-card-details") #Not formated correctly
             house_type = content.find(class_="list-card-statusText")
             house_address = content.find(class_="list-card-addr")
-            house_link = content.find(class_="list-card-link list-card-link-top-margin list-card-img")
-            print(house_type.text.strip()[2:len(house_type.text.strip())])
+            house_bedroom_num = content.find(class_="list-card-details").find_next(text=True)
+            house_bathroom_num = content.find(class_="list-card-details")
+            print(house_bedroom_num.text)
+            # house_link = content.find(class_="list-card-link list-card-link-top-margin list-card-img")
+            # print(house_type.text.strip()[2:len(house_type.text.strip())])
             print(house_specs.text.strip())
-            print(house_price.text.strip())
-            print(house_address.text.strip())
-            print(house_link["href"])
+            # print(house_price.text.strip())
+            # # print(house_bedroom_num.text.strip(), house_bathroom_num)
+            # print(house_link["href"])
             print()
 Scrape_Zillow()
