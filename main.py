@@ -43,28 +43,33 @@ def Scrape_Zillow():
     }
     with requests.Session() as s:   
         locationInput = input("Where is the location? (city, state)")
-        URL = 'https://www.zillow.com/homes/for_sale/'+locationInput    
+        URL = 'https://www.zillow.com/homes/for_sale/' + locationInput  
         print(URL)
         page = s.get(URL, headers=req_headers)
         soup = BeautifulSoup(page.content, "html.parser")
         results = soup.find_all(class_="list-card list-card-additional-attribution list-card-additional-attribution-space list-card_not-saved")
-        # spe = soup.find("ul", { "class" : "list-card-details" }).find_all("li", recursive=False)
-        # print(spe.text.split())
-
-
+        
+        
         for content in results:
             house_price = content.find(class_="list-card-price")
             house_specs = content.find(class_="list-card-details") #Not formated correctly
             house_type = content.find(class_="list-card-statusText")
             house_address = content.find(class_="list-card-addr")
-            house_bedroom_num = content.find(class_="list-card-details").find_next(text=True)
-            house_bathroom_num = content.find(class_="list-card-details")
-            print(house_bedroom_num.text)
-            # house_link = content.find(class_="list-card-link list-card-link-top-margin list-card-img")
-            # print(house_type.text.strip()[2:len(house_type.text.strip())])
-            print(house_specs.text.strip())
-            # print(house_price.text.strip())
-            # # print(house_bedroom_num.text.strip(), house_bathroom_num)
-            # print(house_link["href"])
+            house_link = content.find(class_="list-card-link list-card-link-top-margin list-card-img")
+
+            children = house_specs.findChildren()
+            house_spec_list = []
+            for child in children:
+                spec = child.find_next(text=True)
+                spec = spec.split()
+                house_spec_list.append(spec)
+
+            house_bedroom_num = house_spec_list[0]
+            house_bathroom_num = house_spec_list[2]
+            house_sqft = house_spec_list[4]
+            print(house_type.text.strip()[2:len(house_type.text.strip())])
+            print(house_bedroom_num[0], "bedrooms,", house_bathroom_num[0], "bathrooms,", house_sqft[0], "sqft")
+            print(house_price.text.strip())
+            print(house_link["href"])
             print()
 Scrape_Zillow()
