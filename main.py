@@ -44,7 +44,9 @@ def Scrape_Zillow():
     with requests.Session() as s:   
         locationInput = input("Where is the location? (city, state)")
         URL = 'https://www.zillow.com/homes/for_sale/' + locationInput  
+        print()
         print(URL)
+        print()
         page = s.get(URL, headers=req_headers)
         soup = BeautifulSoup(page.content, "html.parser")
         results = soup.find_all(class_="list-card list-card-additional-attribution list-card-additional-attribution-space list-card_not-saved")
@@ -63,12 +65,12 @@ def Scrape_Zillow():
                 spec = child.find_next(text=True)
                 spec = spec.split()
                 house_spec_list.append(spec)
-
             house_bedroom_num = house_spec_list[0]
             house_bathroom_num = house_spec_list[2]
             house_sqft = house_spec_list[4]
+
             print(house_type.text.strip()[2:len(house_type.text.strip())])
-            print(house_bedroom_num[0], "bedrooms,", house_bathroom_num[0], "bathrooms,", house_sqft[0], "sqft")
+            print(house_bedroom_num[0], "bedrooms |", house_bathroom_num[0], "bathrooms |", house_sqft[0], "sqft")
             print(house_price.text.strip())
             print(house_link["href"])
             print()
